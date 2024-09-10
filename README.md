@@ -8,8 +8,17 @@ This Flask app captures network traffic, detects anomalies, and prevents ARP spo
 - Detect and prevent ARP spoofing (MITM)
 - Display open ports
 - User-friendly interface for monitoring
-
+## How to Run
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+    ```
+## Run the app:
+```bash
+python app.py
+ ```
 ## Project Structure
+```bash
 Autonomous-Network-Defence-and-Monitor/
 ├── static/
 │   ├── css/
@@ -25,12 +34,6 @@ Autonomous-Network-Defence-and-Monitor/
 ├── arp_spoof_detection.py
 ├── requirements.txt
 └── README.md
+```
 
-## How to Run
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-## Run the app:
-```bash
-python app.py
 
