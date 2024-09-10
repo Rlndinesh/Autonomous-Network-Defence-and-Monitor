@@ -1,4 +1,4 @@
-# Network Monitor App
+# Autonomous-Network-Defence-and-Monitor
 
 This Flask app captures network traffic, detects anomalies, and prevents ARP spoofing attacks. It displays blocked traffic and open ports on a simple UI.
 
