@@ -1,46 +1,40 @@
 from flask import Flask, render_template, jsonify
-import subprocess
-import threading
-from packet_sniffer import start_packet_sniffing
-from arp_spoof_detection import start_arp_spoof_detection
+from packet_sniffer import start_packet_sniffing, get_allowed_traffic, get_blocked_traffic
+from traffic_monitor import scan_open_ports
 
 app = Flask(__name__)
 
-blocked_traffic = []
-
-# Route for home page to display network traffic and open ports
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Route to get blocked traffic
+@app.route('/allowed_traffic')
+def allowed_traffic():
+    return render_template('allowed_traffic.html')
+
 @app.route('/blocked_traffic')
-def blocked_traffic_page():
+def blocked_traffic():
     return render_template('blocked_traffic.html')
 
-@app.route('/get_blocked_traffic')
-def get_blocked_traffic():
-    return jsonify(blocked_traffic)
-
-# Function to list open ports using netstat
-def list_open_ports():
-    result = subprocess.run(['netstat', '-tuln'], stdout=subprocess.PIPE)
-    return result.stdout.decode('utf-8')
-
-# Route to display open ports
 @app.route('/open_ports')
-def open_ports_page():
+def open_ports():
     return render_template('open_ports.html')
 
-@app.route('/get_open_ports')
-def get_open_ports():
-    return jsonify({'ports': list_open_ports()})
+@app.route('/api/allowed_traffic')
+def api_allowed_traffic():
+    allowed_traffic = get_allowed_traffic()
+    return jsonify({"allowed": allowed_traffic})
 
-# Start the packet sniffer and ARP spoof detection
-def start_network_monitoring():
-    threading.Thread(target=start_packet_sniffing, args=(blocked_traffic,)).start()
-    threading.Thread(target=start_arp_spoof_detection).start()
+@app.route('/api/blocked_traffic')
+def api_blocked_traffic():
+    blocked_traffic = get_blocked_traffic()
+    return jsonify({"blocked": blocked_traffic})
+
+@app.route('/api/open_ports')
+def api_open_ports():
+    ports = scan_open_ports()
+    return jsonify({"ports": ports})
 
 if __name__ == '__main__':
-    start_network_monitoring()
-    app.run(debug=True, use_reloader=False)
+    start_packet_sniffing()  # Start sniffing packets in the background
+    app.run(debug=True)

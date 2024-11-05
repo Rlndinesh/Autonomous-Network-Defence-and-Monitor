@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allowed Traffic</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Allowed Traffic</h1>
+    <div id="allowed-traffic"></div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        fetch('/api/allowed_traffic')
+            .then(response => response.json())
+            .then(data => {
+                const allowedContainer = document.getElementById('allowed-traffic');
+                allowedContainer.innerHTML = data.allowed.map(item => `<p>${item.src} -> ${item.dst}</p>`).join('');
+            })
+            .catch(error => console.error('Error fetching allowed traffic:', error));
+    </script>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/blocked_traffic">Blocked Traffic</a>
+        <a href="/open_ports">Open Ports</a>
+    </nav>
+</body>
+</html>
