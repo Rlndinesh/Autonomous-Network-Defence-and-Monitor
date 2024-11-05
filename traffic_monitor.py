@@ -1,10 +1,5 @@
 import socket
 
-# Retrieve traffic data
-def get_traffic_data():
-    from packet_sniffer import traffic_data
-    return traffic_data
-
 # Scan for open ports on localhost
 def scan_open_ports():
     open_ports = []

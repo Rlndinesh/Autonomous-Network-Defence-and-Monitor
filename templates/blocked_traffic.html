@@ -24,31 +24,34 @@
     </div>
 </body>
 </html> -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blocked Traffic</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <h1>Blocked Traffic</h1>
-    <div id="blocked-traffic"></div>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script>
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Blocked Traffic</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Port</th>
+        </tr>
+    </thead>
+    <tbody id="blocked-traffic"></tbody>
+</table>
+<script>
+    function fetchBlockedTraffic() {
         fetch('/api/blocked_traffic')
             .then(response => response.json())
             .then(data => {
-                const blockedContainer = document.getElementById('blocked-traffic');
-                blockedContainer.innerHTML = data.blocked.map(item => `<p>${item.src} -> ${item.dst}</p>`).join('');
+                const blockedTrafficContainer = document.getElementById('blocked-traffic');
+                blockedTrafficContainer.innerHTML = data.blocked.map(item => 
+                    `<tr><td>${item.src}</td><td>${item.dst}</td><td>${item.port}</td></tr>`
+                ).join('');
             })
             .catch(error => console.error('Error fetching blocked traffic:', error));
-    </script>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/allowed_traffic">Allowed Traffic</a>
-        <a href="/open_ports">Open Ports</a>
-    </nav>
-</body>
-</html>
+    }
+
+    setInterval(fetchBlockedTraffic, 60000); // Fetch every minute
+    fetchBlockedTraffic(); // Initial fetch
+</script>
+{% endblock %}

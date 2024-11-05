@@ -23,24 +23,22 @@ def process_packet(packet):
             traffic_data['blocked'].append(entry)
         else:
             traffic_data['allowed'].append(entry)
-        print(f"{entry['status']}: {entry['src']} -> {entry['dst']}")
 
 # Start sniffing packets
 def start_packet_sniffing():
     sniff(prn=process_packet, store=False)
 
-# Add IP to block list
-def add_ip_to_blocklist(ip_address):
-    blocked_ips.add(ip_address)
+# Retrieve traffic data
+def get_traffic_data():
+    return traffic_data
 
-# Remove IP from block list
-def remove_ip_from_blocklist(ip_address):
-    blocked_ips.discard(ip_address)
-
-# Get allowed traffic
-def get_allowed_traffic():
-    return traffic_data['allowed']
-
-# Get blocked traffic
-def get_blocked_traffic():
-    return traffic_data['blocked']
+# Scan for open ports on localhost
+def scan_open_ports():
+    open_ports = []
+    for port in range(1, 1024):  # Scan well-known ports
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.settimeout(1)  # 1-second timeout for quick scanning
+            result = sock.connect_ex(('127.0.0.1', port))
+            if result == 0:
+                open_ports.append(port)
+    return open_ports
