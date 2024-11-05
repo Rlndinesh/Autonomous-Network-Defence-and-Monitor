@@ -1,0 +1,45 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Ports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Open Ports</h1>
+        <pre id="open-ports"></pre>
+        <a href="/" class="btn">Back to Home</a>
+    </div>
+</body>
+</html>  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Ports</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Open Ports</h1>
+    <div id="open-ports"></div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        fetch('/api/open_ports')
+            .then(response => response.json())
+            .then(data => {
+                const openPortsContainer = document.getElementById('open-ports');
+                openPortsContainer.innerHTML = data.ports.map(port => `<p>Port: ${port.port}, Service: ${port.service}</p>`).join('');
+            })
+            .catch(error => console.error('Error fetching open ports:', error));
+    </script>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/allowed_traffic">Allowed Traffic</a>
+        <a href="/blocked_traffic">Blocked Traffic</a>
+    </nav>
+</body>
+</html>
